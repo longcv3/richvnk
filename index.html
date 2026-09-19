@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giao diện App Đầu Tư</title>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #1a1a1a;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 70px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            overflow: hidden;
+        }
+
+        /* Chuyển đổi tab */
+        .page-tab { display: none; }
+        .page-tab.active { display: block; }
+
+        /* AUTH STYLES (ĐĂNG NHẬP / ĐĂNG KÝ) */
+        .auth-container {
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #1a1a1a;
+        }
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .auth-logo i {
+            font-size: 45px;
+            color: #e63946;
+            margin-bottom: 10px;
+        }
+        .auth-logo h1 {
+            font-size: 22px;
+            color: #e63946;
+            letter-spacing: 1px;
+        }
+        .auth-logo p {
+            font-size: 11px;
+            color: #fca311;
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
+        .auth-switch-btns {
+            display: flex;
+            background-color: #282828;
+            border-radius: 25px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+        .auth-tab-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            color: #aaa;
+            font-weight: bold;
+            font-size: 13px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .auth-tab-btn.active {
+            background: linear-gradient(90deg, #e5c158, #b8860b);
+            color: #111;
+        }
+        .auth-form-group {
+            margin-bottom: 15px;
+        }
+        .auth-form-group label {
+            display: block;
+            font-size: 11px;
+            color: #aaa;
+            margin-bottom: 6px;
+        }
+        .auth-input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .auth-input-wrap i {
+            position: absolute;
+            left: 12px;
+            color: #ff8c00;
+            font-size: 14px;
+        }
+        .auth-input-wrap input {
+            width: 100%;
+            background-color: #282828;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 12px 12px 12px 38px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+        }
+        .auth-input-wrap input:focus {
+            border-color: #ff8c00;
+        }
+
+        /* TRANG CHỦ */
+        .top-banner {
+            background-color: #111;
+            padding: 15px 10px;
+            text-align: center;
+            border-bottom: 1px solid #222;
+        }
+        .top-banner .logo-title { 
+            font-size: 20px; 
+            color: #e63946; 
+            font-weight: 900; 
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .top-banner .logo-title i { color: #e63946; }
+        .top-banner p { 
+            font-size: 11px; 
+            color: #fca311; 
+            margin-top: 4px; 
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .ticker {
+            background-color: #222222;
+            padding: 8px 12px;
+            font-size: 11px;
+            color: #aaa;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px 5px;
+            padding: 18px 10px;
+            text-align: center;
+        }
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #ddd;
+            cursor: pointer;
+        }
+        .icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 6px;
+            overflow: hidden;
+        }
+        .icon-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .menu-item span { font-size: 11px; color: #ccc; }
+
+        /* Màu nền icon */
+        .bg-purple { background-color: #8a2be2; }
+        .bg-yellow-gold { background-color: #d4af37; }
+        .bg-blue   { background-color: #0088cc; }
+        .bg-orange { background-color: #ff5722; }
+        .bg-green  { background-color: #2ecc71; }
+        .bg-pink   { background-color: #ff007f; }
+        .bg-amber  { background-color: #ff9800; }
+        .bg-indigo { background-color: #5c6bc0; }
+
+        .vip-card {
+            background-color: #242424;
+            margin: 10px 12px;
+            padding: 12px 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        .vip-info { display: flex; align-items: center; gap: 12px; }
+        .vip-info i { color: #ff3b30; font-size: 26px; }
+        .vip-text h3 { font-size: 13px; color: #fff; font-weight: bold; }
+        .vip-text p { font-size: 10px; color: #888; margin-top: 2px; }
+        .vip-right-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        .vip-badge {
+            background-color: #111;
+            color: #d4af37;
+            border: 1px solid #d4af37;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .vip-btn-action {
+            background: linear-gradient(90deg, #f39c12, #e67e22);
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .ai-banner {
+            margin: 15px 12px;
+            padding: 10px;
+            text-align: center;
+        }
+        .ai-banner h2 { font-size: 15px; color: #e0e0e0; font-weight: bold; margin-bottom: 6px; }
+        .ai-banner p { font-size: 10px; color: #777; line-height: 1.4; }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 12px;
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+        .section-header h3 { font-size: 13px; color: #eee; font-weight: bold; }
+        .section-header span { font-size: 10px; color: #888; cursor: pointer; }
+
+        /* TRANG ĐẦU TƯ */
+        .invest-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 15px; background-color: #1a1a1a;
+        }
+        .invest-header i { font-size: 18px; color: #fff; cursor: pointer; }
+        .invest-header h2 { font-size: 16px; font-weight: bold; }
+
+        .summary-card {
+            background: linear-gradient(135deg, #e5c158, #b8860b);
+            margin: 10px; padding: 15px; border-radius: 12px; color: #111;
+        }
+        .summary-top { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; }
+        .summary-amount { font-size: 22px; font-weight: bold; margin: 5px 0 10px 0; }
+        .summary-details { display: flex; justify-content: space-between; border-top: 1px solid rgba(0,0,0,0.15); padding-top: 8px; font-size: 10px; }
+        .summary-details div p:first-child { color: #444; margin-bottom: 2px; }
+        .summary-details div p:last-child { font-weight: bold; font-size: 11px; }
+
+        .invest-item { background-color: #242424; margin: 8px 12px; padding: 12px; border-radius: 10px; }
+        .invest-item-top { display: flex; justify-content: space-between; align-items: center; }
+        .item-info { display: flex; align-items: center; gap: 10px; }
+        .item-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; overflow: hidden; }
+        .item-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .item-title { font-size: 13px; font-weight: bold; }
+        .item-sub { font-size: 10px; color: #888; margin-top: 2px; }
+        .rate-box { text-align: right; }
+        .rate-text { color: #ff8c00; font-weight: bold; font-size: 12px; }
+        .btn-action { margin-top: 4px; background-color: #d4a373; color: #fff; border: none; padding: 4px 12px; border-radius: 12px; font-size: 10px; cursor: pointer; }
+        .btn-action.disabled { background-color: #444; color: #888; cursor: not-allowed; }
+
+        .range-text { font-size: 10px; color: #aaa; margin-top: 6px; }
+        .progress-bar { height: 4px; background-color: #333; border-radius: 3px; overflow: hidden; margin-top: 6px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #ff8c00, #ff4500); }
+
+        /* MODAL OVERLAY CHUNG */
+        .detail-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #181818; z-index: 1000; display: none;
+            flex-direction: column; overflow-y: auto;
+        }
+        .detail-overlay.active { display: flex; }
+        .detail-content-area { padding: 15px; padding-bottom: 80px; }
+
+        /* Form Controls */
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 11px; color: #aaa; margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; background-color: #282828; border: 1px solid #444;
+            border-radius: 6px; padding: 10px; color: #fff; font-size: 12px;
+        }
+        .btn-submit-action {
+            width: 100%; background: linear-gradient(90deg, #e5c158, #b8860b);
+            color: #111; font-weight: bold; font-size: 13px; border: none;
+            padding: 12px; border-radius: 20px; cursor: pointer; margin-top: 10px;
+        }
+
+        /* KHUNG HIỂN THỊ MÃ QR CODE */
+        .qr-container {
+            text-align: center;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .qr-container img {
+            max-width: 180px;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        /* CSKH STYLES */
+        .cskh-box {
+            background-color: #282828;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #383838;
+        }
+        .cskh-btn-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #1e1e1e;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 13px;
+        }
+        .cskh-btn-item:last-child { margin-bottom: 0; }
+        .cskh-btn-left { display: flex; align-items: center; gap: 10px; }
+        .cskh-btn-left i { font-size: 18px; }
+
+        /* TRANG CÀI ĐẶT THÔNG TIN CÁ NHÂN */
+        .settings-card {
+            background-color: #282828;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .settings-avatar-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #383838;
+        }
+        .settings-avatar-box {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #ff8c00;
+            margin-bottom: 8px;
+        }
+        .settings-avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+        .settings-info-list { display: flex; flex-direction: column; gap: 12px; }
+        .settings-info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+            font-size: 12px;
+        }
+        .settings-info-item:last-child { border-bottom: none; }
+        .settings-info-item .lbl { color: #aaa; }
+        .settings-info-item .val { color: #fff; font-weight: bold; }
+
+        /* TRANG ĐẠI LÝ */
+        .agent-header { text-align: center; padding: 15px; font-size: 15px; font-weight: bold; background-color: #1a1a1a; border-bottom: 1px solid #2a2a2a; }
+        .agent-card { background-color: #ffffff; color: #000; margin: 10px 15px; border-radius: 12px; padding: 20px 15px; }
+        .agent-card-stats { display: flex; justify-content: space-around; text-align: center; margin-bottom: 15px; }
+        .agent-stat-box p:first-child { font-size: 11px; font-weight: bold; color: #222; margin-bottom: 6px; }
+        .agent-stat-box p:last-child { font-size: 13px; color: #d4a373; font-weight: bold; }
+        .btn-copy-link { width: 100%; background-color: #e5c158; color: #fff; border: none; padding: 10px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; }
+
+        /* TRANG THÔNG BÁO */
+        .notice-header { text-align: center; padding: 15px; font-size: 15px; font-weight: bold; background-color: #1a1a1a; border-bottom: 1px solid #2a2a2a; }
+        .notice-list { padding: 12px; }
+        .notice-card { background-color: #282828; border-radius: 10px; padding: 12px 15px; margin-bottom: 10px; border-left: 3px solid #ff8c00; }
+        .notice-title { font-size: 13px; font-weight: bold; color: #fff; margin-bottom: 4px; }
+        .notice-time { font-size: 10px; color: #888; margin-bottom: 6px; }
+        .notice-desc { font-size: 11px; color: #ccc; line-height: 1.4; }
+
+        /* TRANG CỦA TÔI (PROFILE) */
+        .profile-bg-header { background: linear-gradient(180deg, #d4a373 0%, #1e1e1e 100%); padding: 20px 15px 30px 15px; display: flex; align-items: center; gap: 12px; }
+        .avatar-box { width: 50px; height: 50px; border-radius: 50%; background-color: #fff; overflow: hidden; border: 2px solid #ff8c00; }
+        .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+        .user-info h3 { font-size: 15px; color: #fff; }
+        .user-info p { font-size: 11px; color: #eee; margin-top: 2px; }
+
+        .balance-card { background-color: #282828; margin: -20px 12px 15px 12px; padding: 15px; border-radius: 12px; position: relative; }
+        .balance-title { font-size: 11px; color: #aaa; }
+        .balance-amount { font-size: 18px; font-weight: bold; color: #fff; margin: 4px 0 15px 0; }
+        .balance-actions { display: flex; justify-content: space-around; text-align: center; }
+        .b-action-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; color: #ccc; cursor: pointer; }
+        .b-action-item i { font-size: 16px; color: #d4a373; }
+
+        .profile-menu { background-color: #282828; margin: 0 12px 15px 12px; border-radius: 12px; overflow: hidden; }
+        .p-menu-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #333; font-size: 12px; color: #ddd; cursor: pointer; }
+        .p-menu-item:last-child { border-bottom: none; }
+        .p-menu-left { display: flex; align-items: center; gap: 10px; }
+        .p-menu-left i { font-size: 14px; width: 20px; text-align: center; }
+
+        .section-label { font-size: 12px; color: #fff; font-weight: bold; margin: 15px 12px 8px 12px; }
+        
+        .service-grid { 
+            background-color: #282828; 
+            margin: 0 12px 15px 12px; 
+            border-radius: 12px; 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            padding: 15px 5px; 
+            text-align: center; 
+            gap: 10px; 
+        }
+
+        .logout-btn { margin: 15px 12px; padding: 10px; border-radius: 20px; border: 1px solid #d4a373; color: #d4a373; text-align: center; font-size: 12px; cursor: pointer; }
+
+        /* TRANG QUẢN TRỊ VIÊN & ADMIN CARD MỚI */
+        .admin-header { background-color: #8b0000; padding: 15px; text-align: center; font-weight: bold; font-size: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .user-list { padding: 12px; }
+        .admin-sec { background-color: #282828; border-radius: 10px; padding: 12px; margin-bottom: 12px; border: 1px solid #333; }
+        .admin-sec-title { font-size: 13px; font-weight: bold; color: #ff8c00; margin-bottom: 10px; border-bottom: 1px solid #444; padding-bottom: 5px; }
+
+        .admin-search-box { position: relative; margin-bottom: 12px; }
+        .admin-search-box input {
+            width: 100%; background-color: #1a1a1a; border: 1px solid #ff8c00;
+            border-radius: 6px; padding: 8px 12px 8px 30px; color: #fff; font-size: 11px;
+        }
+        .admin-search-box i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #ff8c00; font-size: 11px; }
+
+        .admin-user-card { background-color: #1e1e1e; border-radius: 8px; padding: 10px; margin-bottom: 10px; border: 1px solid #383838; font-size: 11px; }
+        .admin-user-card.status-locked { border-color: #f44336; background-color: #2a1a1a; }
+        .auc-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 6px; margin-bottom: 6px; }
+        .auc-name { font-weight: bold; color: #fff; font-size: 12px; }
+        .auc-id { color: #ff8c00; font-weight: bold; }
+        .auc-row { display: flex; justify-content: space-between; margin-bottom: 4px; color: #aaa; }
+        .auc-row .val { color: #fff; font-weight: bold; }
+        .auc-actions { display: flex; gap: 5px; margin-top: 8px; padding-top: 6px; border-top: 1px dashed #333; flex-wrap: wrap; }
+        .btn-adm { border: none; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .btn-adm-add { background-color: #2e7d32; color: #fff; }
+        .btn-adm-sub { background-color: #c62828; color: #fff; }
+        .btn-adm-edit { background-color: #0288d1; color: #fff; }
+        .btn-adm-pass { background-color: #9c27b0; color: #fff; }
+        .btn-adm-lock { background-color: #d32f2f; color: #fff; }
+        .btn-adm-unlock { background-color: #ed6c02; color: #fff; }
+
+        .btn-approve { background-color: #2e7d32; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; margin-right: 5px; }
+        .btn-reject { background-color: #c62828; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; }
+
+        /* BOTTOM NAVIGATION */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; max-width: 400px; height: 60px;
+            background-color: #1a1a1a; display: flex; justify-content: space-around;
+            align-items: center; border-top: 1px solid #2a2a2a; z-index: 100;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #777; font-size: 10px; cursor: pointer; }
+        .nav-item i { font-size: 18px; margin-bottom: 3px; }
+        .nav-item.active { color: #ff8c00; }
+
+        .nav-item.center-btn { position: relative; top: -12px; }
+        .nav-item.center-btn .icon-circle {
+            width: 46px; height: 46px; background: linear-gradient(135deg, #ff8c00, #ff4500);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #fff;
+            box-shadow: 0 4px 10px rgba(255, 69, 0, 0.4); border: 3px solid #1a1a1a;
+        }
+        .nav-item.center-btn .icon-circle i { font-size: 18px; margin: 0; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- MÀN HÌNH ĐĂNG NHẬP & ĐĂNG KÝ -->
+        <div id="tab-auth" class="page-tab active">
+            <div class="auth-container">
+                <div class="auth-logo">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <h1>RICHVN.VIP</h1>
+                    <p>Đầu Tư Thông Minh - Phát Tài Bền Vững</p>
+                </div>
+
+                <div class="auth-switch-btns">
+                    <button class="auth-tab-btn active" id="btn-tab-login" onclick="toggleAuthMode('login')">Đăng Nhập</button>
+                    <button class="auth-tab-btn" id="btn-tab-register" onclick="toggleAuthMode('register')">Đăng Ký</button>
+                </div>
+
+                <!-- FORM ĐĂNG NHẬP -->
+                <div id="auth-login-form">
+                    <div class="auth-form-group">
+                        <label>Tên đăng nhập / Số điện thoại:</label>
+                        <div class="auth-input-wrap">
+                            <i class="fa-solid fa-user"></i>
+                            <input type="text" id="login-username" placeholder="Nhập tên đăng nhập hoặc SĐT..." value="0988888888">
+                        </div>
+                    </div>
+                    <div class="auth-form-group">
+                        <label>Mật khẩu:</label>
+                        <div class="auth-input-wrap">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="login-password" placeholder="Nhập mật khẩu..." value="123456">
+                        </div>
+                    </div>
+                    <button class="btn-submit-action" onclick="handleLogin()">ĐĂNG NHẬP NGAY</button>
+                    <div style="text-align: center; margin-top: 15px; font-size: 11px; color: #aaa;">
+                        Mẹo: Tài khoản Admin có thể đăng nhập bằng username: <b style="color:#ff8c00;">admin</b> / pass: <b style="color:#ff8c00;">admin123</b>
+                    </div>
+                </div>
+
+                <!-- FORM ĐĂNG KÝ -->
+                <div id="auth-register-form" style="display: none;">
+                    <div class="auth-form-group">
+                        <label>Tên tài khoản / Họ tên:</label>
+                        <div class="auth-input-wrap">
+                            <i class="fa-solid fa-id-card"></i>
+                            <input type="text" id="reg-name" placeholder="Ví dụ: Nguyễn Văn A">
+                        </div>
+                    </div>
+                    <div class="auth-form-group">
+                        <label>Số điện thoại:</label>
+                        <div class="auth-input-wrap">
+                            <i class="fa-solid fa-phone"></i>
+                            <input type="text" id="reg-phone" placeholder="Nhập số điện thoại...">
+                        </div>
+                    </div>
+                    <div class="auth-form-group">
+                        <label>Mật khẩu:</label>
+                        <div class="auth-input-wrap">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="reg-password" placeholder="Tạo mật khẩu...">
+                        </div>
+                    </div>
+                    <div class="auth-form-group">
+                        <label>Xác nhận mật khẩu:</label>
+                        <div class="auth-input-wrap">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <input type="password" id="reg-password-confirm" placeholder="Nhập lại mật khẩu...">
+                        </div>
+                    </div>
+                    <button class="btn-submit-action" onclick="handleRegister()">TẠO TÀI KHOẢN MỚI</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 1: TRANG CHỦ -->
+        <div id="tab-home" class="page-tab">
+            <div class="top-banner">
+                <div class="logo-title">
+                    <i class="fa-solid fa-chart-line"></i> RICHVN.VIP
+                </div>
+                <p>HÀNH TRÌNH LÀM GIÀU BẮT ĐẦU TỪ ĐÂY!</p>
+            </div>
+
+            <div class="ticker">
+                <i class="fa-solid fa-volume-high" style="color: #d4af37;"></i>
+                <span>Đối tác đáng tin cậy cho hành trình đầu tư của bạn...</span>
+            </div>
+
+            <div class="menu-grid">
+                <div class="menu-item" onclick="openRewardModal()"><div class="icon-box bg-purple"><i class="fa-regular fa-calendar-check"></i></div><span>Điểm danh</span></div>
+                <div class="menu-item"><div class="icon-box bg-yellow-gold"><i class="fa-regular fa-circle-play"></i></div><span>Tân thủ</span></div>
+                <div class="menu-item" onclick="openDepositModal()"><div class="icon-box bg-blue"><i class="fa-solid fa-wallet"></i></div><span>Nạp tiền</span></div>
+                <div class="menu-item" onclick="openWithdrawModal()"><div class="icon-box bg-orange"><i class="fa-solid fa-plus"></i></div><span>Rút tiền</span></div>
+                <div class="menu-item" onclick="switchTab('agent')"><div class="icon-box bg-green"><i class="fa-solid fa-share-nodes"></i></div><span>Đội nhóm</span></div>
+                <div class="menu-item" onclick="openRewardModal()"><div class="icon-box bg-pink"><i class="fa-solid fa-filter"></i></div><span>Rút thăm</span></div>
+                <div class="menu-item"><div class="icon-box bg-amber"><i class="fa-solid fa-download"></i></div><span>Tải xuống</span></div>
+                <div class="menu-item" onclick="openCskhModal()"><div class="icon-box bg-indigo"><i class="fa-regular fa-file-lines"></i></div><span>Công ty</span></div>
+            </div>
+
+            <div class="vip-card">
+                <div class="vip-info">
+                    <i class="fa-solid fa-fire-flame-curved"></i>
+                    <div class="vip-text">
+                        <h3>Thành viên VIP trọn đời</h3>
+                        <p>Chu kỳ: Vĩnh viễn</p>
+                        <p>Số tiền: 790,000</p>
+                    </div>
+                </div>
+                <div class="vip-right-btn">
+                    <div class="vip-badge">14,000 / Ngày</div>
+                    <button class="vip-btn-action" onclick="openVipModal()">Tham gia ngay</button>
+                </div>
+            </div>
+
+            <div class="ai-banner">
+                <h2>Bể giao dịch định lượng AI</h2>
+                <p>Giao dịch minh bạch, lợi nhuận ổn định, không rủi ro, vốn và lợi nhuận tự động phát hành khi đến hạn</p>
+            </div>
+
+            <div class="section-header">
+                <h3>Sản phẩm được đề xuất</h3>
+                <span onclick="switchTab('invest')">Xem thêm ></span>
+            </div>
+
+            <div id="home-invest-list">
+                <!-- Hiển thị các gói đầu tư hàng đầu tại trang chủ -->
+            </div>
+        </div>
+
+        <!-- TAB 2: MỤC ĐẦU TƯ -->
+        <div id="tab-invest" class="page-tab">
+            <div class="invest-header">
+                <i class="fa-solid fa-chevron-left" onclick="switchTab('home')"></i>
+                <h2>Đầu tư</h2>
+                <i class="fa-solid fa-ellipsis-vertical" style="opacity: 0;"></i>
+            </div>
+
+            <!-- Tổng Đầu Tư Card -->
+            <div class="summary-card">
+                <div class="summary-top">
+                    <span>Tổng đầu tư</span>
+                    <span style="font-size: 10px; text-decoration: underline; cursor: pointer;" onclick="openHistoryModal('invest')">Lịch sử đầu tư</span>
+                </div>
+                <div class="summary-amount"><span id="total-invest-display">1,000,000</span> <span style="font-size: 14px;">đ</span></div>
+                <div class="summary-details">
+                    <div>
+                        <p>Lợi nhuận hôm qua</p>
+                        <p id="profit-yesterday-display">20,900</p>
+                    </div>
+                    <div>
+                        <p>Lợi nhuận đáo hạn</p>
+                        <p id="profit-expected-display">13,800</p>
+                    </div>
+                    <div>
+                        <p>Tổng lợi nhuận</p>
+                        <p id="profit-total-display">1,300,000</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Danh sách gói đầu tư sẽ render từ JS -->
+            <div id="main-invest-list"></div>
+        </div>
+
+        <!-- OVERLAY: CÀI ĐẶT THÔNG TIN CÁ NHÂN -->
+        <div id="modal-settings" class="detail-overlay">
+            <div class="invest-header">
+                <i class="fa-solid fa-chevron-left" onclick="closeModal('modal-settings')"></i>
+                <h2>Cài Đặt Tài Khoản</h2>
+                <div></div>
+            </div>
+            <div class="detail-content-area">
+                <div class="settings-card">
+                    <div class="settings-avatar-wrap">
+                        <div class="settings-avatar-box">
+                            <img src="https://via.placeholder.com/100" alt="Avatar">
+                        </div>
+                        <span style="font-size: 13px; font-weight: bold; color: #fff;" id="setting-account-name">User_8892</span>
+                    </div>
+
+                    <div class="settings-info-list">
+                        <div class="settings-info-item">
+                            <span class="lbl">UID Tài khoản</span>
+                            <span class="val" id="setting-uid">889201</span>
+                        </div>
+                        <div class="settings-info-item">
+                            <span class="lbl">Cấp độ VIP</span>
+                            <span class="val" style="color: #ffd700;" id="setting-vip">VIP 1</span>
+                        </div>
+                        <div class="settings-info-item">
+                            <span class="lbl">Tên tài khoản</span>
+                            <span class="val" id="setting-username">User_8892</span>
+                        </div>
+                        <div class="settings-info-item">
+                            <span class="lbl">Địa chỉ Gmail</span>
+                            <span class="val" id="setting-email">user8892@gmail.com</span>
+                        </div>
+                        <div class="settings-info-item">
+                            <span class="lbl">Số điện thoại</span>
+                            <span class="val" id="setting-phone">098***8892</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OVERLAY: XÁC NHẬN THAM GIA VIP -->
+        <div id="modal-vip" class="detail-overlay">
+            <div class="invest-header">
+                <i class="fa-solid fa-chevron-left" onclick="closeModal('modal-vip')"></i>
+                <h2>Thành Viên VIP Trọn Đời</h2>
+                <div></div>
+            </div>
+            <div class="detail-content-area">
+                <div class="invest-item" style="margin:0 0 15px 0;">
+                    <div class="invest-item-top">
+                        <div class="item-info">
+                            <i class="fa-solid fa-fire-flame-curved" style="color:#ff3b30; font-size:30px;"></i>
+                            <div>
+                                <div class="item-title">Gói VIP Trọn Đời</div>
+                                <div class="item-sub">Lợi nhuận: 14,000đ / Ngày</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background-color:#282828; padding:15px; border-radius:10px; font-size:12px; color:#ccc; margin-bottom:15px; line-height:1.8;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span>Giá gói VIP:</span>
+                        <span style="color:#fca311; font-weight:bold;">790,000 VNĐ</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span>Số dư hiện tại của bạn:</span>
+                        <span id="vip-user-balance" style="color:#4caf50; font-weight:bold;">0 VNĐ</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span>Chu kỳ:</span>
+                        <span style="color:#fff; font-weight:bold;">Vĩnh viễn</span>
+                    </div>
+                </div>
+
+                <button class="btn-submit-action" onclick="submitVipJoin()">Xác nhận tham gia</button>
+            </div>
+        </div>
+
+        <!-- OVERLAY: MỤC CSKH (USER) -->
+        <div id="modal-cskh" class="detail-overlay">
+            <div class="invest-header">
+                <i class="fa-solid fa-chevron-left" onclick="closeModal('modal-cskh')"></i>
+                <h2>Trung Tâm CSKH</h2>
+                <div></div>
+            </div>
+            <div class="detail-content-area">
+                <div class="cskh-box" style="text-align: center;">
+                    <i class="fa-solid fa-headset" style="font-size: 40px; color: #ff8c00; margin-bottom: 10px;"></i>
+                    <h3 style="font-size: 14px; color: #fff; margin-bottom: 5px;">Hỗ Trợ Khách Hàng 24/7</h3>
+                    <p style="font-size: 11px; color: #aaa; line-height: 1.5;" id="user-cskh-notice">
+                        Nếu bạn gặp sự cố khi nạp/rút tiền hoặc cần hỗ trợ kĩ thuật, vui lòng liên hệ trực tiếp qua các kênh hỗ trợ bên dưới:
+                    </p>
+                </div>
+
+                <a id="user-cskh-telegram" href="https://t.me/" target="_blank" class="cskh-btn-item">
+                    <div class="cskh-btn-left">
+                        <i class="fa-brands fa-telegram" style="color: #0088cc;"></i>
+                        <span>Kênh Hỗ Trợ Telegram</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: #666; font-size: 11px;"></i>
+                </a>
+
+                <a id="user-cskh-zalo" href="https://zalo.me/" target="_blank" class="cskh-btn-item">
+                    <div class="cskh-btn-left">
+                        <i class="fa-solid fa-comment-dots" style="color: #0068ff;"></i>
+                        <span>Tư Vấn Trực Tuyến Zalo</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: #666; font-size: 11px;"></i>
+                </a>
+
+                <a id="user-cskh-hotline" href="tel:19000000" class="cskh-btn-item">
+                    <div class="cskh-btn-left">
+                        <i class="fa-solid fa-phone-volume" style="color: #4caf50;"></i>
+                        <span>Hotline Tổng Đài</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: #666; font-size: 11px;"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- OVERLAY: MỤC NẠP TIỀN -->
+        <div id="modal-deposit" class="detail-overlay">
+            <div class="invest-header">
+                <i class="fa-solid fa-chevron-left" onclick="closeModal('modal-deposit')"></i>
+                <h2>Nạp tiền vào tài khoản</h2>
+                <div></div>
+            </div>
+            <div class="detail-content-area">
+                <div style="background-color:#282828; padding:12px; border-radius:8px; margin-bottom:15px; border-left:3px solid #03a9f4;">
+                    <div style="font-size:11px; color:#aaa;">Thẻ ngân hàng nhận tiền:</div>
+                    <div style="font-size:13px; font-weight:bold; color:#ffd700; margin-top:4px;" id="admin-bank-name-display">Ngân hàng: MB BANK</div>
+                    <div style="font-size:12px; color:#fff;" id="admin-bank-num-display">STK: 09999999999</div>
+                    <div style="font-size:12px; color:#fff;" id="admin-bank-owner-display">Chủ TK: CONG TY RICHVN</div>
+                    
+                    <div class="qr-container" id="user-qr-box">
+                        <p style="color:#333; font-size:11px; font-weight:bold; margin-bottom:5px;">MÃ QR QUÉT THANH TOÁN</p>
+                        <img id="user-bank-qr-display" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=MBBANK-09999999999" alt="Mã QR Chuyển Tiền">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Số tiền nạp (VNĐ):</label>
+                    <input type="number" id="deposit-amount" placeholder="Nhập số tiền nạp...">
+                </div>
+                <div class="form-group">
+                    <label>Mã giao dịch / Nội dung CK:</label>
+                    <input type="text" id="deposit-code" placeholder="Ví dụ: Naptien 8892">
+                </div>
+                <button class="btn-submit-action" onclick="submitDeposit()">Tạo lệnh nạp tiền</button>
+            </div>
+        </div>
+
+        <!-- OVERLAY: MỤC RÚT TIỀN -->
+        <div id="modal-withdraw" class="detail-overlay">
+            <div class="invest-header">
+                <i class="fa-solid fa-chevron-left" onclick="closeModal('modal-withdraw')"></i>
+                <h2>Rút tiền về Ngân Hàng</h2>
+                <div></div>
+            </div>
+            <div class="detail-content-area">
+                <div class="form-group">
+                    <label>Chọn Tên Ngân Hàng:</label>
+                    <select id="withdraw-bank-name">
+                        <option value="MBBank">MB Bank</option>
+                        <option value="Vietcombank">Vietcombank</option>
+                        <option value="Techcombank">Techcombank</option>
+                        <option value="BIDV">BIDV</option>
+                        <option value="Agribank">Agribank</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Số tài khoản người nhận:</label>
+                    <input type="text" id="withdraw-bank-num" placeholder="Nhập số tài khoản..." oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                </div>
+                <div class="form-group">
+                    <label>Tên người thụ hưởng:</label>
+                    <input type="text" id="withdraw-bank-owner" placeholder="Nhập tên chủ tài khoản..." oninput="this.value = this.value.replace(/[^a-zA-ZàáảãạâầấẩẫậăằắẳẵặèéẻẽẹêềếểễệđìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵĂÂĐÊÔƠƯ\s]/g, '').toUpperCase()">
+                </div>
+                
+                <div class="form-group">
+                    <label>Tải ảnh QR nhận tiền (Tùy chọn):</label>
+                    <input type="file" id="withdraw-qr-file" accept="image/*" onchange="previewWithdrawQR(event)">
+                    <div id="withdraw-qr-preview-box" style="margin-top:8px; display:none; text-align:center;">
+                        <img id="withdraw-qr-preview" src="" style="max-width: 150px; border-radius: 6px; border:1px solid #ff8c00;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Số tiền rút (VNĐ):</label>
+                    <input type="number" id="withdraw-amount" placeholder="Số tiền muốn rút...">
+                </div>
+                <button class="btn-submit-action" onclick="submitWithdraw()">Xác nhận rút tiền</button>
+            </div>
+        </div>
+
+        <!-- OVERLAY: LỊCH SỬ NẠP / RÚT / ĐẦU TƯ / GIAO DỊCH -->
+        <div id="modal-history" class="detail-overlay">
+            <div class="invest-header">
+                <i class="fa-solid fa-chevron-left" onclick="closeModal('modal-history')"></i>
+                <h2 id="history-modal-title">Lịch sử rút tiền</h2>
+                <div></div>
+            </div>
+            <div class="detail-content-area" id="history-list-container">
+            </div>
+        </div>
+
+        <!-- OVERLAY: MỤC ĐIỂM THƯỞNG -->
+        <div id="modal-reward" class="detail-overlay">
+            <div class="invest-header">
+                <i class="fa-solid fa-chevron-left" onclick="closeModal('modal-reward')"></i>
+                <h2>Điểm thưởng & Báo danh</h2>
+                <div></div>
+            </div>
+            <div class="detail-content-area" style="text-align: center;">
+                <i class="fa-solid fa-gift" style="font-size: 50px; color: #e91e63; margin-top:20px;"></i>
+                <h3 style="margin-top:15px;">Điểm thưởng hiện tại: <span id="reward-points-display" style="color:#ffd700;">100</span> PTS</h3>
+                <p style="font-size:11px; color:#aaa; margin: 10px 0 20px 0;">Điểm danh hàng ngày để nhận ngay 10,000 VNĐ vào tài khoản!</p>
+                
+                <button class="btn-submit-action" id="btn-checkin" onclick="claimDailyReward()">Điểm danh hôm nay (+10,000đ)</button>
+            </div>
+        </div>
+
+        <!-- OVERLAY: CHI TIẾT GÓI ĐẦU TƯ -->
+        <div id="invest-detail-overlay" class="detail-overlay">
+            <div class="invest-header">
+                <i class="fa-solid fa-chevron-left" onclick="closeInvestDetail()"></i>
+                <h2>Đầu tư</h2>
+                <div></div>
+            </div>
+            <div class="detail-content-area">
+                <div class="invest-item" style="margin:0 0 15px 0;">
+                    <div class="invest-item-top">
+                        <div class="item-info">
+                            <div id="detail-icon-box" class="item-icon bg-yellow-gold"><i id="detail-icon" class="fa-solid fa-coins"></i></div>
+                            <div>
+                                <div class="item-title" id="detail-name">MONERO</div>
+                                <div class="item-sub" id="detail-days-lbl">7 Ngày - Thời gian khóa</div>
+                            </div>
+                        </div>
+                        <div class="rate-box">
+                            <div class="rate-text" id="detail-rate">2.4%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label id="detail-limit-label">Số tiền đầu tư (VNĐ):</label>
+                    <input type="number" id="invest-amount-input" placeholder="Nhập số tiền..." oninput="calculateProfit()">
+                </div>
+
+                <div style="background-color:#282828; padding:12px; border-radius:8px; font-size:11px; color:#ccc; margin-bottom:15px; line-height:1.6;">
+                    <p style="font-weight:bold; color:#fff;">Dự tính lợi nhuận:</p>
+                    <p>- Tiền lãi mỗi ngày: <span id="example-daily-profit" style="color:#ff8c00;">0</span> đ</p>
+                    <p>- Tổng nhận khi đáo hạn: <span id="example-total-receive" style="color:#4caf50;">0</span> đ</p>
+                </div>
+
+                <button class="btn-submit-action" onclick="executeInvestment()">Xác nhận đầu tư ngay</button>
+            </div>
+        </div>
+
+        <!-- TAB ĐẠI LÝ -->
+        <div id="tab-agent" class="page-tab">
+            <div class="agent-header">Đội nhóm</div>
+            <div class="agent-card">
+                <div class="agent-card-stats">
+                    <div class="agent-stat-box"><p>Số tiền đầu tư(đ)</p><p>16,900,000</p></div>
+                    <div class="agent-stat-box"><p>Hoàn tiền(đ)</p><p>7,000</p></div>
+                </div>
+                <button class="btn-copy-link">Sao chép liên kết mời</button>
+            </div>
+        </div>
+
+        <!-- TAB THÔNG BÁO -->
+        <div id="tab-notice" class="page-tab">
+            <div class="notice-header">Mục Thông Báo</div>
+            <div class="notice-list" id="notice-list-container">
+                <div class="notice-card">
+                    <div class="notice-title">Chào mừng thành viên mới!</div>
+                    <div class="notice-time">2026-09-11 08:30:00</div>
+                    <div class="notice-desc">Cảm ơn bạn đã tham gia hệ thống đầu tư RICHVN.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CỦA TÔI (PROFILE) -->
+        <div id="tab-profile" class="page-tab">
+            <div class="profile-bg-header">
+                <div class="avatar-box"><img src="https://via.placeholder.com/100" alt="Avatar"></div>
+                <div class="user-info">
+                    <h3 id="profile-display-username">User_8892</h3>
+                    <p>ID: <span id="profile-display-id">889201</span> | <span id="profile-display-vip">VIP 1</span></p>
+                </div>
+            </div>
+
+            <!-- Card Số dư -->
+            <div class="balance-card">
+                <div class="balance-title">Tổng số dư</div>
+                <div class="balance-amount">đ <span id="user-balance-display">21,280</span></div>
+                
+                <div class="balance-actions">
+                    <div class="b-action-item" onclick="openDepositModal()">
+                        <i class="fa-solid fa-wallet"></i>
+                        <span>Nạp tiền</span>
+                    </div>
+                    <div class="b-action-item" onclick="openWithdrawModal()">
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                        <span>Rút tiền</span>
+                    </div>
+                    <div class="b-action-item" onclick="openHistoryModal('invest')">
+                        <i class="fa-solid fa-receipt"></i>
+                        <span>Lịch sử đầu tư</span>
+                    </div>
+                    <div class="b-action-item" onclick="openRewardModal()">
+                        <i class="fa-solid fa-gift"></i>
+                        <span>Điểm thưởng</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENU TÀI KHOẢN -->
+            <div class="profile-menu">
+                <div class="p-menu-item" onclick="openHistoryModal('deposit')">
+                    <div class="p-menu-left"><i class="fa-solid fa-file-invoice-dollar" style="color: #ff4500;"></i><span>Lịch sử nạp tiền</span></div>
+                    <i class="fa-solid fa-chevron-right" style="color: #666; font-size: 10px;"></i>
+                </div>
+                <div class="p-menu-item" onclick="openHistoryModal('withdraw')">
+                    <div class="p-menu-left"><i class="fa-solid fa-building-columns" style="color: #ff8c00;"></i><span>Lịch sử rút tiền</span></div>
+                    <i class="fa-solid fa-chevron-right" style="color: #666; font-size: 10px;"></i>
+                </div>
+                <div class="p-menu-item" onclick="openHistoryModal('transaction')">
+                    <div class="p-menu-left"><i class="fa-solid fa-list-check" style="color: #03a9f4;"></i><span>Lịch sử giao dịch</span></div>
+                    <i class="fa-solid fa-chevron-right" style="color: #666; font-size: 10px;"></i>
+                </div>
+                <div class="p-menu-item" onclick="switchTab('notice')">
+                    <div class="p-menu-left"><i class="fa-solid fa-envelope" style="color: #ffb300;"></i><span>Tin nhắn</span></div>
+                    <i class="fa-solid fa-chevron-right" style="color: #666; font-size: 10px;"></i>
+                </div>
+                <div class="p-menu-item" onclick="switchTab('agent')">
+                    <div class="p-menu-left"><i class="fa-solid fa-chart-line" style="color: #4caf50;"></i><span>Đội nhóm</span></div>
+                    <i class="fa-solid fa-chevron-right" style="color: #666; font-size: 10px;"></i>
+                </div>
+            </div>
+
+            <!-- TRUNG TÂM DỊCH VỤ -->
+            <div class="section-label">Trung tâm dịch vụ</div>
+            <div class="service-grid">
+                <div class="b-action-item" onclick="openSettingsModal()">
+                    <i class="fa-solid fa-gear" style="color: #ffb300;"></i>
+                    <span>Cài đặt</span>
+                </div>
+                <!-- NÚT QUẢN TRỊ (CHỈ HIỂN THỊ KHI ADMIN DĂNG NHẬP) -->
+                <div class="b-action-item" id="admin-menu-btn" onclick="switchTab('admin')" style="display: none;">
+                    <i class="fa-solid fa-user-shield" style="color: #ff4500;"></i>
+                    <span>Quản trị</span>
+                </div>
+                <div class="b-action-item">
+                    <i class="fa-solid fa-box-archive" style="color: #ff8c00;"></i>
+                    <span>Tải xuống</span>
+                </div>
+                <div class="b-action-item" onclick="openCskhModal()">
+                    <i class="fa-solid fa-headset" style="color: #03a9f4;"></i>
+                    <span>CSKH</span>
+                </div>
+            </div>
+
+            <div class="logout-btn" onclick="handleLogout()"><i class="fa-solid fa-power-off"></i> Đăng xuất</div>
+        </div>
+
+        <!-- TAB QUẢN TRỊ VIÊN -->
+        <div id="tab-admin" class="page-tab">
+            <div class="admin-header">
+                <i class="fa-solid fa-chevron-left" onclick="switchTab('profile')" style="cursor: pointer;"></i>
+                <span>BẢNG QUẢN TRỊ VIÊN</span>
+                <span></span>
+            </div>
+            
+            <div class="user-list">
+                <!-- MỤC QUẢN LÝ & THÊM GÓI ĐẦU TƯ MỚI -->
+                <div class="admin-sec">
+                    <div class="admin-sec-title"><i class="fa-solid fa-plus-circle"></i> Thêm Gói Đầu Tư Mới</div>
+                    <div class="form-group">
+                        <label>Tên gói đầu tư:</label>
+                        <input type="text" id="admin-pkg-name" placeholder="Ví dụ: Ethereum Staking, Bitcoin AI Pool...">
+                    </div>
+                    <div class="form-group">
+                        <label>Lãi suất hàng ngày (%):</label>
+                        <input type="number" step="0.1" id="admin-pkg-rate" placeholder="Ví dụ: 2.5">
+                    </div>
+                    <div class="form-group">
+                        <label>Thời gian khóa (ngày):</label>
+                        <input type="number" id="admin-pkg-days" placeholder="Ví dụ: 30">
+                    </div>
+                    <div class="form-group">
+                        <label>Số tiền đầu tư tối thiểu (Min VNĐ):</label>
+                        <input type="number" id="admin-pkg-min" placeholder="Ví dụ: 100000">
+                    </div>
+                    <div class="form-group">
+                        <label>Số tiền đầu tư tối đa (Max VNĐ):</label>
+                        <input type="number" id="admin-pkg-max" placeholder="Ví dụ: 5000000">
+                    </div>
+                    <div class="form-group">
+                        <label>Tải ảnh gói (Icon/Ảnh đại diện):</label>
+                        <input type="file" id="admin-pkg-file" accept="image/*" onchange="previewPackageImage(event)">
+                    </div>
+                    <div class="form-group">
+                        <label>Hoặc Nhập URL Ảnh gói:</label>
+                        <input type="text" id="admin-pkg-imgurl" placeholder="https://domain.com/image.png" oninput="updatePkgImgFromURL()">
+                    </div>
+                    <div style="text-align:center; margin:10px 0;">
+                        <span style="font-size:10px; color:#aaa;">Xem trước ảnh gói:</span><br>
+                        <img id="admin-pkg-preview" src="https://via.placeholder.com/80" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid #ff8c00; margin-top:5px; background:#fff;">
+                    </div>
+                    <button class="btn-approve" style="width:100%; padding:8px;" onclick="addNewInvestmentPackage()">+ Thêm Gói Đầu Tư Mới</button>
+                </div>
+
+                <div class="admin-sec">
+                    <div class="admin-sec-title"><i class="fa-solid fa-list-check"></i> Quản Lý Danh Sách Gói Đầu Tư Hiện Có</div>
+                    <div id="admin-packages-manage-list"></div>
+                </div>
+
+                <!-- MỤC TÌM KIẾM & QUẢN LÝ NGƯỜI DÙNG -->
+                <div class="admin-sec">
+                    <div class="admin-sec-title"><i class="fa-solid fa-users-gear"></i> Quản Lý Danh Sách Người Dùng</div>
+                    
+                    <div class="admin-search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="admin-user-search-input" placeholder="Tìm kiếm theo ID hoặc Tên người dùng..." oninput="renderAdminUsers()">
+                    </div>
+
+                    <div id="admin-user-list-container"></div>
+                </div>
+
+                <!-- MỤC CẤU HÌNH CSKH -->
+                <div class="admin-sec">
+                    <div class="admin-sec-title"><i class="fa-solid fa-headset"></i> Cấu hình Dịch Vụ Khách Hàng (CSKH)</div>
+                    <div class="form-group">
+                        <label>Thông báo / Lời chào CSKH:</label>
+                        <textarea id="admin-cskh-notice" rows="2">Nếu bạn gặp sự cố khi nạp/rút tiền hoặc cần hỗ trợ kĩ thuật, vui lòng liên hệ trực tiếp qua các kênh hỗ trợ bên dưới:</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Link Telegram CSKH:</label>
+                        <input type="text" id="admin-cskh-telegram" value="https://t.me/cskh_richvn">
+                    </div>
+                    <div class="form-group">
+                        <label>Link Zalo CSKH:</label>
+                        <input type="text" id="admin-cskh-zalo" value="https://zalo.me/0999999999">
+                    </div>
+                    <div class="form-group">
+                        <label>Hotline CSKH:</label>
+                        <input type="text" id="admin-cskh-hotline" value="19000000">
+                    </div>
+                    <button class="btn-approve" style="width:100%; padding:8px;" onclick="saveAdminCskh()">Lưu Cấu Hình CSKH</button>
+                </div>
+
+                <!-- MỤC CẤU HÌNH NGÂN HÀNG & MÃ QR -->
+                <div class="admin-sec">
+                    <div class="admin-sec-title"><i class="fa-solid fa-building-columns"></i> Cấu hình Ngân hàng & QR Nạp tiền</div>
+                    <div class="form-group">
+                        <label>Tên Ngân Hàng:</label>
+                        <input type="text" id="admin-bank-name" value="MB BANK">
+                    </div>
+                    <div class="form-group">
+                        <label>Số Tài Khoản:</label>
+                        <input type="text" id="admin-bank-num" value="09999999999">
+                    </div>
+                    <div class="form-group">
+                        <label>Chủ Tài Khoản:</label>
+                        <input type="text" id="admin-bank-owner" value="CONG TY RICHVN">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tải file Ảnh QR Code Nạp Tiền:</label>
+                        <input type="file" id="admin-qr-file" accept="image/*" onchange="previewAdminQR(event)">
+                    </div>
+                    <div class="form-group">
+                        <label>Hoặc Nhập URL Ảnh QR Code:</label>
+                        <input type="text" id="admin-qr-url" placeholder="https://domain.com/qrcode.png" oninput="updateAdminQRFromURL()">
+                    </div>
+                    
+                    <div style="text-align:center; margin:10px 0;">
+                        <span style="font-size:10px; color:#aaa;">Xem trước QR sẽ hiển thị cho User:</span><br>
+                        <img id="admin-qr-preview" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=MBBANK-09999999999" style="max-width:140px; border-radius:6px; border:2px solid #ff8c00; margin-top:5px; background:#fff; padding:4px;">
+                    </div>
+
+                    <button class="btn-approve" style="width:100%; padding:8px;" onclick="saveAdminBank()">Lưu thông tin NH & QR Code</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thanh Nav dưới đáy (Chỉ hiển thị sau khi đăng nhập) -->
+        <div class="bottom-nav" id="app-bottom-nav" style="display: none;">
+            <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
+                <i class="fa-solid fa-house"></i>
+                <span>Trang chủ</span>
+            </div>
+            <div class="nav-item" id="nav-notice" onclick="switchTab('notice')">
+                <i class="fa-regular fa-bell"></i>
+                <span>Thông báo</span>
+            </div>
+            <div class="nav-item center-btn" id="nav-invest" onclick="switchTab('invest')">
+                <div class="icon-circle">
+                    <i class="fa-solid fa-gem"></i>
+                </div>
+                <span>Đầu tư</span>
+            </div>
+            <div class="nav-item" id="nav-agent" onclick="switchTab('agent')">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Đại lý</span>
+            </div>
+            <div class="nav-item" id="nav-profile" onclick="switchTab('profile')">
+                <i class="fa-regular fa-user"></i>
+                <span>CỦA TÔI</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script Logic hoàn chỉnh -->
+    <script>
+        let currentBalance = 21280;
+        let totalInvested = 1000000;
+        let totalExpectedProfit = 13800;
+        let rewardPoints = 100;
+        let vipPrice = 790000;
+
+        let currentUserProfile = null; // null khi chưa đăng nhập
+
+        // Danh sách người dùng hệ thống (Gồm 1 Quản trị viên mẫu và Thành viên)
+        let userList = [
+            { id: "888888", name: "Quản trị viên", phone: "admin", password: "admin123", regTime: "2026-09-01 00:00:00", balance: 99999999, isLocked: false, isAdmin: true, vip: "VIP ADMIN", email: "admin@richvn.vip" },
+            { id: "889201", name: "User_8892", phone: "0988888888", password: "123456", regTime: "2026-09-11 14:25:10", balance: 21280, isLocked: false, isAdmin: false, vip: "VIP 1", email: "user8892@gmail.com" }
+        ];
+
+        let packageList = [
+            { id: "pkg_1", name: "STARK NET", rate: 2.3, days: 2, min: 100000, max: 1000000, iconClass: "fa-solid fa-cubes", bgClass: "bg-indigo", imgUrl: "", soldOut: false },
+            { id: "pkg_2", name: "Tether Gold", rate: 2.4, days: 7, min: 100000, max: 1000000, iconClass: "fa-solid fa-coins", bgClass: "bg-yellow-gold", imgUrl: "", soldOut: false },
+            { id: "pkg_3", name: "Bitkub Coin", rate: 2.8, days: 15, min: 100000, max: 1000000, iconClass: "fa-solid fa-right-left", bgClass: "bg-green", imgUrl: "", soldOut: false },
+            { id: "pkg_4", name: "Chainlink", rate: 3.0, days: 45, min: 100000, max: 1000000, iconClass: "fa-solid fa-link", bgClass: "bg-blue", imgUrl: "", soldOut: true }
+        ];
+
+        let tempPackageImg = "";
+        let bankInfo = { name: "MB BANK", num: "09999999999", owner: "CONG TY RICHVN", qrImg: "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=MBBANK-09999999999" };
+        let cskhInfo = { notice: "Nếu bạn gặp sự cố khi nạp/rút tiền hoặc cần hỗ trợ kĩ thuật, vui lòng liên hệ trực tiếp qua các kênh hỗ trợ bên dưới:", telegram: "https://t.me/cskh_richvn", zalo: "https://zalo.me/0999999999", hotline: "19000000" };
+
+        let depositList = [];
+        let withdrawList = [];
+        let investHistoryList = [];
+        let noticeList = [{ title: "Chào mừng thành viên mới!", time: "2026-09-11 08:30:00", desc: "Cảm ơn bạn đã tham gia hệ thống đầu tư RICHVN." }];
+
+        window.onload = function() {
+            renderPackages();
+        };
+
+        /* --- XỬ LÝ ĐĂNG NHẬP / ĐĂNG KÝ / ĐĂNG XUẤT --- */
+        function toggleAuthMode(mode) {
+            let btnLogin = document.getElementById('btn-tab-login');
+            let btnReg = document.getElementById('btn-tab-register');
+            let formLogin = document.getElementById('auth-login-form');
+            let formReg = document.getElementById('auth-register-form');
+
+            if (mode === 'login') {
+                btnLogin.classList.add('active');
+                btnReg.classList.remove('active');
+                formLogin.style.display = 'block';
+                formReg.style.display = 'none';
+            } else {
+                btnReg.classList.add('active');
+                btnLogin.classList.remove('active');
+                formReg.style.display = 'block';
+                formLogin.style.display = 'none';
+            }
+        }
+
+        function handleLogin() {
+            let usernameInput = document.getElementById('login-username').value.trim();
+            let passwordInput = document.getElementById('login-password').value.trim();
+
+            if (!usernameInput || !passwordInput) {
+                alert("Vui lòng nhập đầy đủ Tên đăng nhập/SĐT và Mật khẩu!");
+                return;
+            }
+
+            let user = userList.find(u => (u.phone === usernameInput || u.name === usernameInput) && u.password === passwordInput);
+
+            if (!user) {
+                alert("Tên đăng nhập hoặc mật khẩu không chính xác!");
+                return;
+            }
+
+            if (user.isLocked) {
+                alert("Tài khoản của bạn hiện đã bị khóa. Vui lòng liên hệ CSKH!");
+                return;
+            }
+
+            // Đăng nhập thành công
+            currentUserProfile = user;
+            currentBalance = user.balance;
+
+            // Kiểm tra quyền Admin để ẩn/hiện nút Quản trị
+            let adminBtn = document.getElementById('admin-menu-btn');
+            if (user.isAdmin) {
+                adminBtn.style.display = 'flex';
+            } else {
+                adminBtn.style.display = 'none';
+            }
+
+            // Cập nhật giao diện profile
+            document.getElementById('profile-display-username').innerText = user.name;
+            document.getElementById('profile-display-id').innerText = user.id;
+            document.getElementById('profile-display-vip').innerText = user.vip;
+
+            updateBalanceDisplays();
+            document.getElementById('app-bottom-nav').style.display = 'flex';
+            switchTab('home');
+            alert(`Xin chào ${user.name}! Đăng nhập thành công.`);
+        }
+
+        function handleRegister() {
+            let name = document.getElementById('reg-name').value.trim();
+            let phone = document.getElementById('reg-phone').value.trim();
+            let pass = document.getElementById('reg-password').value.trim();
+            let passConfirm = document.getElementById('reg-password-confirm').value.trim();
+
+            if (!name || !phone || !pass || !passConfirm) {
+                alert("Vui lòng nhập đầy đủ tất cả thông tin đăng ký!");
+                return;
+            }
+
+            if (pass !== passConfirm) {
+                alert("Mật khẩu xác nhận không khớp!");
+                return;
+            }
+
+            // Kiểm tra trùng SĐT
+            let existUser = userList.find(u => u.phone === phone);
+            if (existUser) {
+                alert("Số điện thoại này đã được đăng ký trước đó!");
+                return;
+            }
+
+            let newUserId = String(Math.floor(100000 + Math.random() * 900000));
+            let newUser = {
+                id: newUserId,
+                name: name,
+                phone: phone,
+                password: pass,
+                regTime: getRealCurrentTime(),
+                balance: 0,
+                isLocked: false,
+                isAdmin: false, // Thành viên thường, KHÔNG CÓ QUYỀN ADMIN
+                vip: "VIP 1",
+                email: phone + "@gmail.com"
+            };
+
+            userList.push(newUser);
+            alert("Đăng ký tài khoản thành công! Hãy đăng nhập ngay.");
+            
+            // Chuyển sang ô đăng nhập & điền sẵn thông tin
+            document.getElementById('login-username').value = phone;
+            document.getElementById('login-password').value = pass;
+            toggleAuthMode('login');
+        }
+
+        function handleLogout() {
+            if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
+                currentUserProfile = null;
+                document.getElementById('app-bottom-nav').style.display = 'none';
+                switchTab('auth');
+            }
+        }
+
+        /* --- XỬ LÝ CHUYỂN TAB VÀ TIỆN ÍCH --- */
+        function switchTab(tabName) {
+            document.querySelectorAll('.page-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+
+            if(document.getElementById('tab-' + tabName)) {
+                document.getElementById('tab-' + tabName).classList.add('active');
+            }
+            if(document.getElementById('nav-' + tabName)) {
+                document.getElementById('nav-' + tabName).classList.add('active');
+            }
+            if(tabName === 'admin') {
+                if(!currentUserProfile || !currentUserProfile.isAdmin) {
+                    alert("Bạn không có quyền truy cập vào trang này!");
+                    switchTab('home');
+                    return;
+                }
+                renderAdminUsers();
+                renderAdminPackages();
+            }
+        }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function openDepositModal() { document.getElementById('modal-deposit').classList.add('active'); }
+        function openWithdrawModal() { document.getElementById('modal-withdraw').classList.add('active'); }
+        function openRewardModal() { document.getElementById('modal-reward').classList.add('active'); }
+        function openCskhModal() { document.getElementById('modal-cskh').classList.add('active'); }
+
+        function openSettingsModal() {
+            if(!currentUserProfile) return;
+            document.getElementById('setting-account-name').innerText = currentUserProfile.name;
+            document.getElementById('setting-uid').innerText = currentUserProfile.id;
+            document.getElementById('setting-vip').innerText = currentUserProfile.vip;
+            document.getElementById('setting-username').innerText = currentUserProfile.name;
+            document.getElementById('setting-email').innerText = currentUserProfile.email;
+            document.getElementById('setting-phone').innerText = currentUserProfile.phone;
+            document.getElementById('modal-settings').classList.add('active');
+        }
+
+        function openVipModal() {
+            document.getElementById('vip-user-balance').innerText = currentBalance.toLocaleString('vi-VN') + " VNĐ";
+            document.getElementById('modal-vip').classList.add('active');
+        }
+
+        function submitVipJoin() {
+            if (currentBalance < vipPrice) {
+                alert(`Số dư của bạn không đủ (${currentBalance.toLocaleString('vi-VN')} VNĐ). Cần thêm ${(vipPrice - currentBalance).toLocaleString('vi-VN')} VNĐ để tham gia gói VIP!`);
+                return;
+            }
+            currentBalance -= vipPrice;
+            updateBalanceDisplays();
+            alert("Chúc mừng! Bạn đã đăng ký thành công gói Thành viên VIP trọn đời!");
+            closeModal('modal-vip');
+        }
+
+        function getRealCurrentTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+
+        /* --- XỬ LÝ ĐẦU TƯ --- */
+        function renderPackages() {
+            let mainBox = document.getElementById('main-invest-list');
+            let homeBox = document.getElementById('home-invest-list');
+            if(!mainBox) return;
+            mainBox.innerHTML = '';
+            if(homeBox) homeBox.innerHTML = '';
+
+            packageList.forEach((pkg, index) => {
+                let iconDisplay = pkg.imgUrl ? `<img src="${pkg.imgUrl}" alt="${pkg.name}">` : `<i class="${pkg.iconClass}"></i>`;
+                let actionBtn = pkg.soldOut ? `<button class="btn-action disabled" disabled>Hết hàng</button>` : `<button class="btn-action" onclick="openInvestDetailById('${pkg.id}')">Đầu tư</button>`;
+
+                let itemHtml = `
+                    <div class="invest-item">
+                        <div class="invest-item-top">
+                            <div class="item-info">
+                                <div class="item-icon ${pkg.bgClass}">${iconDisplay}</div>
+                                <div>
+                                    <div class="item-title">${pkg.name}</div>
+                                    <div class="item-sub">Thời gian khóa: ${pkg.days} Ngày</div>
+                                </div>
+                            </div>
+                            <div class="rate-box">
+                                <div class="rate-text">${pkg.rate}% / Ngày</div>
+                                ${actionBtn}
+                            </div>
+                        </div>
+                        <div class="range-text">${pkg.min.toLocaleString('vi-VN')} - ${pkg.max.toLocaleString('vi-VN')}</div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: ${pkg.soldOut ? '100%' : '45%'};"></div></div>
+                    </div>
+                `;
+
+                mainBox.innerHTML += itemHtml;
+                if(homeBox && index < 2) homeBox.innerHTML += itemHtml;
+            });
+        }
+
+        function openInvestDetailById(pkgId) {
+            let pkg = packageList.find(p => p.id === pkgId);
+            if(!pkg) return;
+            selectedPackage = pkg;
+            document.getElementById('detail-name').innerText = pkg.name;
+            document.getElementById('detail-rate').innerText = pkg.rate + '% / Ngày';
+            document.getElementById('detail-days-lbl').innerText = pkg.days + ' Ngày - Thời gian khóa';
+            document.getElementById('detail-limit-label').innerText = `Số tiền đầu tư (Hạn mức: ${pkg.min.toLocaleString('vi-VN')} - ${pkg.max.toLocaleString('vi-VN')} VNĐ):`;
+            document.getElementById('invest-amount-input').value = pkg.min;
+            calculateProfit();
+            document.getElementById('invest-detail-overlay').classList.add('active');
+        }
+
+        function closeInvestDetail() { document.getElementById('invest-detail-overlay').classList.remove('active'); }
+
+        function calculateProfit() {
+            let amount = parseFloat(document.getElementById('invest-amount-input').value) || 0;
+            let dailyProfit = amount * (selectedPackage.rate / 100);
+            let totalProfit = dailyProfit * selectedPackage.days;
+            document.getElementById('example-daily-profit').innerText = dailyProfit.toLocaleString('vi-VN');
+            document.getElementById('example-total-receive').innerText = (amount + totalProfit).toLocaleString('vi-VN');
+        }
+
+        function executeInvestment() {
+            let investAmount = parseFloat(document.getElementById('invest-amount-input').value);
+            if (!investAmount || investAmount < selectedPackage.min || investAmount > selectedPackage.max) {
+                alert("Số tiền đầu tư không nằm trong hạn mức cho phép!");
+                return;
+            }
+            if (investAmount > currentBalance) {
+                alert("Số dư không đủ! Vui lòng nạp thêm tiền.");
+                return;
+            }
+            currentBalance -= investAmount;
+            totalInvested += investAmount;
+            updateBalanceDisplays();
+            alert(`Đầu tư thành công gói ${selectedPackage.name}!`);
+            closeInvestDetail();
+        }
+
+        /* --- QUẢN LÝ ADMIN DANH SÁCH USER VÀ GÓI --- */
+        function renderAdminUsers() {
+            let box = document.getElementById('admin-user-list-container');
+            if(!box) return;
+            box.innerHTML = '';
+            let keyword = (document.getElementById('admin-user-search-input')?.value || '').trim().toLowerCase();
+
+            let filteredList = userList.filter(u => u.id.toLowerCase().includes(keyword) || u.name.toLowerCase().includes(keyword));
+
+            filteredList.forEach(u => {
+                let lockStatusTag = u.isLocked ? `<span style="color:#f44336; font-size:10px; font-weight:bold;">[ĐÃ KHÓA]</span>` : `<span style="color:#4caf50; font-size:10px; font-weight:bold;">[HOẠT ĐỘNG]</span>`;
+                let adminBadge = u.isAdmin ? `<span style="color:#ff8c00; font-weight:bold;"> (ADMIN)</span>` : '';
+
+                box.innerHTML += `
+                    <div class="admin-user-card ${u.isLocked ? 'status-locked' : ''}">
+                        <div class="auc-header">
+                            <span class="auc-name">${u.name} ${adminBadge} ${lockStatusTag}</span>
+                            <span class="auc-id">ID: ${u.id}</span>
+                        </div>
+                        <div class="auc-row"><span>SĐT:</span><span class="val">${u.phone}</span></div>
+                        <div class="auc-row"><span>Mật khẩu:</span><span class="val" style="color:#ffb300;">${u.password}</span></div>
+                        <div class="auc-row"><span>Số dư:</span><span class="val" style="color:#4caf50;">₫${u.balance.toLocaleString('vi-VN')}</span></div>
+                        <div class="auc-actions">
+                            <button class="btn-adm btn-adm-add" onclick="adminAddMoney('${u.id}')"><i class="fa-solid fa-plus"></i> Cộng tiền</button>
+                            <button class="btn-adm btn-adm-sub" onclick="adminSubMoney('${u.id}')"><i class="fa-solid fa-minus"></i> Trừ tiền</button>
+                            <button class="btn-adm btn-adm-pass" onclick="adminChangePassword('${u.id}')"><i class="fa-solid fa-key"></i> Đổi MK</button>
+                            <button class="btn-adm btn-adm-lock" onclick="toggleLockUser('${u.id}')"><i class="fa-solid fa-lock"></i> Khóa/Mở</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function adminAddMoney(userId) {
+            let u = userList.find(x => x.id === userId);
+            if(!u) return;
+            let val = prompt(`CỘNG tiền cho [${u.name}]:`, "100000");
+            if(val && !isNaN(val)) {
+                u.balance += parseFloat(val);
+                if(currentUserProfile && u.id === currentUserProfile.id) currentBalance = u.balance;
+                updateBalanceDisplays();
+                renderAdminUsers();
+            }
+        }
+
+        function adminSubMoney(userId) {
+            let u = userList.find(x => x.id === userId);
+            if(!u) return;
+            let val = prompt(`TRỪ tiền của [${u.name}]:`, "50000");
+            if(val && !isNaN(val)) {
+                u.balance = Math.max(0, u.balance - parseFloat(val));
+                if(currentUserProfile && u.id === currentUserProfile.id) currentBalance = u.balance;
+                updateBalanceDisplays();
+                renderAdminUsers();
+            }
+        }
+
+        function adminChangePassword(userId) {
+            let u = userList.find(x => x.id === userId);
+            if(!u) return;
+            let newPass = prompt(`Nhập MK mới cho [${u.name}]:`, u.password);
+            if(newPass) {
+                u.password = newPass.trim();
+                renderAdminUsers();
+                alert("Đổi mật khẩu thành công!");
+            }
+        }
+
+        function toggleLockUser(userId) {
+            let u = userList.find(x => x.id === userId);
+            if(!u) return;
+            u.isLocked = !u.isLocked;
+            renderAdminUsers();
+        }
+
+        function renderAdminPackages() {
+            let box = document.getElementById('admin-packages-manage-list');
+            if(!box) return;
+            box.innerHTML = '';
+            packageList.forEach(pkg => {
+                box.innerHTML += `
+                    <div style="background-color:#1e1e1e; border-radius:6px; padding:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-size:12px; font-weight:bold; color:#fff;">${pkg.name}</div>
+                            <div style="font-size:10px; color:#aaa;">Lãi: ${pkg.rate}%/ngày | Khóa: ${pkg.days} ngày</div>
+                        </div>
+                        <button class="btn-adm btn-adm-sub" onclick="deletePackage('${pkg.id}')"><i class="fa-solid fa-trash"></i> Xóa</button>
+                    </div>
+                `;
+            });
+        }
+
+        function deletePackage(pkgId) {
+            if(confirm("Bạn có chắc muốn xóa gói này?")) {
+                packageList = packageList.filter(p => p.id !== pkgId);
+                renderPackages();
+                renderAdminPackages();
+            }
+        }
+
+        function previewPackageImage(event) {
+            let file = event.target.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    tempPackageImg = e.target.result;
+                    document.getElementById('admin-pkg-preview').src = tempPackageImg;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updatePkgImgFromURL() {
+            let url = document.getElementById('admin-pkg-imgurl').value.trim();
+            if(url) {
+                tempPackageImg = url;
+                document.getElementById('admin-pkg-preview').src = url;
+            }
+        }
+
+        function addNewInvestmentPackage() {
+            let name = document.getElementById('admin-pkg-name').value.trim();
+            let rate = parseFloat(document.getElementById('admin-pkg-rate').value);
+            let days = parseInt(document.getElementById('admin-pkg-days').value);
+            let min = parseFloat(document.getElementById('admin-pkg-min').value);
+            let max = parseFloat(document.getElementById('admin-pkg-max').value);
+
+            if(!name || isNaN(rate) || isNaN(days) || isNaN(min) || isNaN(max)) {
+                alert("Vui lòng nhập đầy đủ các trường thông tin gói đầu tư!");
+                return;
+            }
+
+            packageList.unshift({
+                id: "pkg_" + Date.now(),
+                name: name, rate: rate, days: days, min: min, max: max,
+                iconClass: "fa-solid fa-chart-pie", bgClass: "bg-orange",
+                imgUrl: tempPackageImg || "https://via.placeholder.com/80", soldOut: false
+            });
+
+            alert(`Thêm gói "${name}" thành công!`);
+            renderPackages();
+            renderAdminPackages();
+        }
+
+        function previewAdminQR(event) {
+            let file = event.target.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    bankInfo.qrImg = e.target.result;
+                    document.getElementById('admin-qr-preview').src = bankInfo.qrImg;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateAdminQRFromURL() {
+            let url = document.getElementById('admin-qr-url').value.trim();
+            if(url) {
+                bankInfo.qrImg = url;
+                document.getElementById('admin-qr-preview').src = url;
+            }
+        }
+
+        function saveAdminBank() {
+            bankInfo.name = document.getElementById('admin-bank-name').value.trim();
+            bankInfo.num = document.getElementById('admin-bank-num').value.trim();
+            bankInfo.owner = document.getElementById('admin-bank-owner').value.trim();
+            document.getElementById('user-bank-qr-display').src = bankInfo.qrImg;
+            alert("Đã cập nhật cấu hình ngân hàng!");
+        }
+
+        function saveAdminCskh() {
+            cskhInfo.notice = document.getElementById('admin-cskh-notice').value;
+            cskhInfo.telegram = document.getElementById('admin-cskh-telegram').value;
+            cskhInfo.zalo = document.getElementById('admin-cskh-zalo').value;
+            cskhInfo.hotline = document.getElementById('admin-cskh-hotline').value;
+
+            document.getElementById('user-cskh-notice').innerText = cskhInfo.notice;
+            document.getElementById('user-cskh-telegram').href = cskhInfo.telegram;
+            document.getElementById('user-cskh-zalo').href = cskhInfo.zalo;
+            document.getElementById('user-cskh-hotline').href = "tel:" + cskhInfo.hotline;
+            alert("Đã lưu cấu hình CSKH!");
+        }
+
+        function updateBalanceDisplays() {
+            let profileBal = document.getElementById('user-balance-display');
+            if(profileBal) profileBal.innerText = currentBalance.toLocaleString('vi-VN');
+            if(currentUserProfile) currentUserProfile.balance = currentBalance;
+        }
+
+        function submitDeposit() {
+            let amount = parseFloat(document.getElementById('deposit-amount').value);
+            if(!amount || amount <= 0) { alert("Vui lòng nhập số tiền hợp lệ!"); return; }
+            alert("Lệnh nạp tiền đã được gửi. Vui lòng chờ xác nhận!");
+            closeModal('modal-deposit');
+        }
+
+        function submitWithdraw() {
+            let amount = parseFloat(document.getElementById('withdraw-amount').value);
+            if(!amount || amount > currentBalance) { alert("Số dư không đủ hoặc số tiền rút không hợp lệ!"); return; }
+            currentBalance -= amount;
+            updateBalanceDisplays();
+            alert("Tạo lệnh rút tiền thành công!");
+            closeModal('modal-withdraw');
+        }
+
+        function claimDailyReward() {
+            currentBalance += 10000;
+            rewardPoints += 10;
+            document.getElementById('reward-points-display').innerText = rewardPoints;
+            updateBalanceDisplays();
+            alert("Bạn đã điểm danh thành công và nhận +10,000 VNĐ vào tài khoản!");
+        }
+
+        function openHistoryModal(type) {
+            document.getElementById('history-modal-title').innerText = type === 'deposit' ? 'Lịch sử nạp tiền' : (type === 'withdraw' ? 'Lịch sử rút tiền' : 'Lịch sử đầu tư');
+            document.getElementById('history-list-container').innerHTML = '<p style="font-size:12px; color:#aaa; text-align:center; padding:20px;">Không có bản ghi giao dịch nào.</p>';
+            document.getElementById('modal-history').classList.add('active');
+        }
+
+        function previewWithdrawQR(event) {
+            let file = event.target.files[0];
+            if(file) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('withdraw-qr-preview').src = e.target.result;
+                    document.getElementById('withdraw-qr-preview-box').style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>
